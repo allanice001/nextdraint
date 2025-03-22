@@ -1,0 +1,1248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Accounts {
+  id String @id @default(cuid())
+}
+
+model accounts {
+  id                         String                 @id @db.Uuid
+  verification               String?
+  email                      String
+  auth0_id                   String?
+  first_name                 String?
+  last_name                  String?
+  legal_name                 String?
+  artworks                   String?
+  orders                     String?
+  old_id                     Int?
+  last_login                 BigInt?
+  stripe_customer_id         String?
+  stripe_subscription_id     String?
+  plan                       String?
+  referrer                   String?
+  active                     Boolean?               @default(false)
+  created_at                 DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime               @default(now()) @db.Timestamptz(6)
+  stripe_user_id             String?                @db.VarChar(255)
+  sign_up_token              String?                @db.VarChar(255)
+  paypal_email               String?
+  mail_token                 String?                @db.VarChar(255)
+  deleted_at                 DateTime?              @db.Timestamptz(6)
+  stripe_payments_account_id String?
+  profiles                   profiles[]
+  subscription_history       subscription_history[]
+}
+
+model accounts_events {
+  id         String   @id @db.Uuid
+  account_id String   @db.Uuid
+  type       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model accounts_mail {
+  id            String   @id @db.Uuid
+  account_id    String   @db.Uuid
+  reminder_send Boolean?
+  reminder_date BigInt?
+}
+
+model accounts_modal_settings {
+  id                String   @id @db.Uuid
+  account_id        String   @db.Uuid
+  saw_after_sign_up Boolean?
+  saw_after_sign_in Boolean?
+}
+
+model accounts_signature {
+  id                  String   @id @db.Uuid
+  account_id          String   @db.Uuid
+  image_url           String
+  is_agree            Boolean
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
+  certificate_created Boolean? @default(false)
+}
+
+model artists_features_cards {
+  id          String   @id @db.Uuid
+  profile_id  String   @db.Uuid
+  title       String
+  description String
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model artwork_media {
+  artwork_id String   @db.Uuid
+  media_id   String   @db.Uuid
+  artworks   artworks @relation(fields: [artwork_id], references: [id], onDelete: Cascade, map: "artwork_media_artwork_id_foreign")
+  media      media    @relation(fields: [media_id], references: [id], onDelete: Cascade, map: "artwork_media_media_id_foreign")
+
+  @@ignore
+}
+
+model artworks {
+  id                        String                      @id @db.Uuid
+  profile_id                String                      @db.Uuid
+  title                     String?
+  legacy_primary_image      String
+  additional_images         Json?
+  price                     Decimal?                    @db.Decimal(12, 2)
+  weight                    Int?
+  width                     Int?
+  height                    Int?
+  thickness                 Int?
+  duration                  BigInt?
+  completed                 BigInt?
+  sold                      Boolean?                    @default(false)
+  style                     String?
+  medium                    String?
+  surface                   String?
+  hashtags                  String?
+  verification              String?
+  old_profile_id            Int?
+  is_approved               Boolean?                    @default(false)
+  reviewed                  Boolean?                    @default(false)
+  old_id                    Int?
+  stripe_product_id         String?
+  created_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  owner_profile_id          String?                     @db.Uuid
+  verified_at               DateTime?                   @db.Timestamp(6)
+  description               String?
+  legacy_small_image        String?
+  fb_catalog_image          String?
+  deleted_at                DateTime?                   @db.Timestamptz(6)
+  deleted_by                String?                     @db.Uuid
+  temp_small_image          String?
+  is_optimized              Boolean?                    @default(false)
+  primary_image             String?
+  small_image               String?
+  prev_verification         String?
+  unverified_at             DateTime?                   @db.Timestamptz(6)
+  prev_price                Decimal?                    @db.Decimal(12, 2)
+  artwork_media             artwork_media[]             @ignore
+  profiles                  profiles                    @relation(fields: [profile_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "artworks_profile_id_foreign")
+  artworks_purchase_history artworks_purchase_history[]
+
+  @@index([id, profile_id], map: "artworks_id_profile_id_index")
+}
+
+model artworks_events {
+  id         String   @id @db.Uuid
+  artwork_id String   @db.Uuid
+  type       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model artworks_gallery {
+  id                 String   @id @db.Uuid
+  artwork_id         String   @db.Uuid
+  legacy_image_url   String
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+  index              String?  @db.VarChar(255)
+  legacy_small_image String?
+  image_url          String?
+  small_image        String?
+}
+
+model artworks_hashtags {
+  id         String @id @db.Uuid
+  artwork_id String @db.Uuid
+  hashtag_id String @db.Uuid
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model artworks_mediums {
+  artwork_id String   @db.Uuid
+  medium_id  Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@ignore
+}
+
+model artworks_purchase_history {
+  id            String    @id @db.Uuid
+  profile_id    String    @db.Uuid
+  artwork_id    String    @db.Uuid
+  order_id      String    @db.Uuid
+  price         Decimal?  @default(0) @db.Decimal(12, 2)
+  completed     Boolean?  @default(false)
+  in_progress   Boolean?  @default(true)
+  acquired_date DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+  artworks      artworks  @relation(fields: [artwork_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "artworks_purchase_history_artwork_id_foreign")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model artworks_series {
+  series_id  String @db.Uuid
+  artwork_id String @db.Uuid
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model artworks_styles {
+  artwork_id String   @db.Uuid
+  style_id   Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model artworks_surfaces {
+  artwork_id String   @db.Uuid
+  surface_id Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@ignore
+}
+
+model atelier_abouts {
+  id             String   @id @db.Uuid
+  small_image    String?
+  primary_image  String?
+  first_content  String?  @db.VarChar(300)
+  quote          String?  @db.VarChar(250)
+  second_content String?  @db.VarChar(300)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+  atelier_id     String   @unique(map: "atelier_abouts_atelier_id_unique") @db.Uuid
+  ateliers       ateliers @relation(fields: [atelier_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "atelier_abouts_atelier_id_foreign")
+}
+
+model atelier_headers {
+  id            String   @id @db.Uuid
+  small_image   String?
+  primary_image String?
+  title         String?  @db.VarChar(100)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  atelier_id    String   @unique(map: "atelier_headers_atelier_id_unique") @db.Uuid
+  ateliers      ateliers @relation(fields: [atelier_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "atelier_headers_atelier_id_foreign")
+}
+
+model atelier_posts {
+  id            String   @id @db.Uuid
+  small_image   String?
+  primary_image String?
+  content       String   @db.VarChar(150)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  atelier_id    String   @db.Uuid
+  ateliers      ateliers @relation(fields: [atelier_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "atelier_posts_atelier_id_foreign")
+}
+
+model atelier_titles {
+  id               String @id @db.Uuid
+  process_question String @db.VarChar(80)
+  enjoy_question   String @db.VarChar(80)
+  about_title      String @db.VarChar(80)
+  about_subtitle   String @db.VarChar(80)
+}
+
+model atelier_videos {
+  id             String   @id @db.Uuid
+  small_image    String?
+  primary_image  String?
+  first_content  String?  @db.VarChar(300)
+  second_content String?  @db.VarChar(300)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+  atelier_id     String   @unique(map: "atelier_videos_atelier_id_unique") @db.Uuid
+  ateliers       ateliers @relation(fields: [atelier_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "atelier_videos_atelier_id_foreign")
+}
+
+model ateliers {
+  id              String           @id @db.Uuid
+  status          String           @default("pending") @db.VarChar(255)
+  public          Boolean          @default(false)
+  created_at      DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime         @default(now()) @db.Timestamptz(6)
+  views           Int              @default(0)
+  profile_id      String           @unique(map: "ateliers_profile_id_unique") @db.Uuid
+  atelier_abouts  atelier_abouts?
+  atelier_headers atelier_headers?
+  atelier_posts   atelier_posts[]
+  atelier_videos  atelier_videos?
+  profiles        profiles         @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ateliers_profile_id_foreign")
+}
+
+model auto_letters {
+  id          String   @id @db.Uuid
+  type        String
+  title       String?
+  text        String?
+  img_link    String?
+  attachment  Boolean? @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  button_name String?
+  button_link String?
+}
+
+model background_images {
+  id                   String   @id @db.Uuid
+  background_image_url String?
+  instagram_name       String?
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model blog {
+  uuid              String       @id @db.Uuid
+  author_profile_id String       @db.Uuid
+  title             String       @db.VarChar(255)
+  content           String
+  featured_image    String?      @db.VarChar(255)
+  created_at        DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime     @default(now()) @db.Timestamptz(6)
+  category_id       String?      @db.Uuid
+  small_image       String?
+  primary_image     String?
+  status            String?      @default("pending") @db.VarChar(20)
+  is_community      Boolean      @default(false)
+  views             Int          @default(0)
+  summary           String?
+  blog_media        blog_media[] @ignore
+}
+
+model blog_categories {
+  id         String   @id @db.Uuid
+  name       String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model blog_media {
+  blog_id  String @db.Uuid
+  media_id String @db.Uuid
+  blog     blog   @relation(fields: [blog_id], references: [uuid], onDelete: Cascade, map: "blog_media_blog_id_foreign")
+  media    media  @relation(fields: [media_id], references: [id], onDelete: Cascade, map: "blog_media_media_id_foreign")
+
+  @@ignore
+}
+
+model blogs_hashtags {
+  id              String  @id @db.Uuid
+  blog_id         String? @db.Uuid
+  atelier_post_id String? @db.Uuid
+  hashtag_id      String  @db.Uuid
+
+  @@unique([atelier_post_id, hashtag_id], map: "blogs_hashtags_atelier_post_id_hashtag_id_unique")
+  @@unique([blog_id, hashtag_id], map: "blogs_hashtags_blog_id_hashtag_id_unique")
+}
+
+model carts {
+  id           String   @id @db.Uuid
+  user_cart_id String   @db.Uuid
+  artwork_id   String   @db.Uuid
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model collectors_watchlist {
+  id         String   @id @db.Uuid
+  account_id String   @db.Uuid
+  artwork_id String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model contact_messages {
+  id         String    @id @db.Uuid
+  contact_id String    @db.Uuid
+  message_id String    @db.Uuid
+  sent_at    DateTime? @db.Timestamptz(6)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime  @default(now()) @db.Timestamptz(6)
+}
+
+model contact_templates {
+  id       String  @id @db.Uuid
+  name     String  @db.VarChar(255)
+  settings String?
+}
+
+model contacts {
+  id                 String    @id @db.Uuid
+  profile_id         String    @db.Uuid
+  name               String?
+  city               String?
+  country            String?
+  email              String
+  phone              String?
+  instagram          String?
+  created_at         DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime  @default(now()) @db.Timestamptz(6)
+  confirmed          Boolean?  @default(false)
+  confirmed_at       DateTime? @db.Timestamptz(6)
+  confirmation_token String?   @db.VarChar(255)
+  is_subscriber      Boolean?  @default(false)
+  subscription_id    String?   @db.Uuid
+  subscriber_id      String?   @db.Uuid
+}
+
+model content_media {
+  id                String   @id @db.Uuid
+  content_media_url String?
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model content_media_modals {
+  modal_id         String @db.Uuid
+  content_media_id String @db.Uuid
+
+  @@ignore
+}
+
+model educations {
+  id         String @id @db.Uuid
+  profile_id String @db.Uuid
+  from       String
+  info       String
+  to         String
+}
+
+model employee {
+  id         String   @id @db.Uuid
+  profile_id String
+  legal_name String?
+  vat        String?
+  country    String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model exhibitions {
+  id         String @id @db.Uuid
+  profile_id String @db.Uuid
+  from       String
+  info       String
+}
+
+model faq_categories {
+  id          String       @id @db.Uuid
+  title       String       @unique(map: "faq_categories_title_unique") @db.VarChar(255)
+  description String       @db.VarChar(85)
+  created_at  DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime     @default(now()) @db.Timestamptz(6)
+  faq_topics  faq_topics[]
+}
+
+model faq_questions {
+  id         String     @id @db.Uuid
+  title      String     @db.VarChar(500)
+  content    String     @db.VarChar(50000)
+  topic_id   String     @db.Uuid
+  created_at DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at DateTime   @default(now()) @db.Timestamptz(6)
+  faq_topics faq_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "faq_questions_topic_id_foreign")
+
+  @@unique([title, topic_id], map: "faq_questions_title_topic_id_unique")
+}
+
+model faq_topics {
+  id             String          @id @db.Uuid
+  title          String          @db.VarChar(500)
+  category_id    String          @db.Uuid
+  created_at     DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime        @default(now()) @db.Timestamptz(6)
+  faq_questions  faq_questions[]
+  faq_categories faq_categories  @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "faq_topics_category_id_foreign")
+
+  @@unique([title, category_id], map: "faq_topics_title_category_id_unique")
+}
+
+model fb_catalog {
+  id                      String   @id @db.Uuid
+  artwork_id              String   @db.Uuid
+  title                   String?
+  description             String?
+  availability            String?
+  inventory               String?
+  condition               String?
+  price                   Decimal? @db.Decimal(12, 2)
+  link                    String?
+  image_link              String?
+  brand                   String?
+  width                   String?
+  height                  String?
+  thickness               String?
+  weight                  String?
+  created_at              DateTime @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime @default(now()) @db.Timestamptz(6)
+  origin_country          String?  @db.VarChar(255)
+  profile_id              String?  @db.VarChar(255)
+  google_product_category String?  @default("9")
+  fb_product_category     String?  @default("999")
+}
+
+model feedback {
+  id         String   @id @db.Uuid
+  account_id String   @db.Uuid
+  message    String?
+  type       String?
+  read       Boolean?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  mark       Int?
+}
+
+model feedback_options {
+  id         String   @id @db.Uuid
+  text       String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model followers {
+  id                 String   @id @db.Uuid
+  account_id         String   @db.Uuid
+  following_profiles String   @db.Uuid
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model hashtags {
+  id   String @id @db.Uuid
+  name String @db.VarChar(255)
+}
+
+model homepage_join_our {
+  id            String   @id @db.Uuid
+  title         String   @db.VarChar(255)
+  primary_image String   @db.VarChar(255)
+  small_image   String   @db.VarChar(255)
+  url           String   @db.VarChar(255)
+  button        String   @db.VarChar(255)
+  show_for_role String   @db.VarChar(255)
+  is_active     Boolean  @default(false)
+  artwork_title String?  @db.VarChar(255)
+  artwork_id    String?  @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model homepage_join_us {
+  id            String   @id @db.Uuid
+  title         String   @db.VarChar(255)
+  primary_image String   @db.VarChar(255)
+  small_image   String   @db.VarChar(255)
+  url           String   @db.VarChar(255)
+  button        String   @db.VarChar(255)
+  show_for_role String   @db.VarChar(255)
+  is_active     Boolean  @default(false)
+  artwork_title String?  @db.VarChar(255)
+  artwork_id    String?  @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model homepage_newsletter {
+  id            String   @id @db.Uuid
+  title         String   @db.VarChar(255)
+  subtitle      String   @db.VarChar(255)
+  primary_image String   @db.VarChar(255)
+  small_image   String   @db.VarChar(255)
+  show_for_role String   @db.VarChar(255)
+  artwork_title String?  @db.VarChar(255)
+  artwork_id    String?  @db.VarChar(255)
+  is_active     Boolean  @default(false)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model homepage_shipment {
+  id            String   @id @db.Uuid
+  title         String   @db.VarChar(255)
+  subtitle      String   @db.VarChar(255)
+  primary_image String   @db.VarChar(255)
+  small_image   String   @db.VarChar(255)
+  url           String   @db.VarChar(255)
+  button        String   @db.VarChar(255)
+  show_for_role String   @db.VarChar(255)
+  artwork_title String?  @db.VarChar(255)
+  artwork_id    String?  @db.VarChar(255)
+  is_active     Boolean  @default(false)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model homepage_sliders {
+  id            String   @id @db.Uuid
+  title         String   @db.VarChar(255)
+  primary_image String   @db.VarChar(255)
+  url           String   @db.VarChar(255)
+  button        String   @db.VarChar(255)
+  author        String?  @db.VarChar(255)
+  name          String?  @db.VarChar(255)
+  is_active     Boolean  @default(false)
+  small_image   String?
+  artwork_id    String?  @db.VarChar(255)
+  show_for_role String?  @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  username      String?  @db.VarChar(255)
+  is_username   String?  @default("default") @db.VarChar(255)
+}
+
+model instagram_media {
+  id            String    @id @db.Uuid
+  profile_id    String?   @db.Uuid
+  media_id      String?   @db.VarChar(255)
+  permalink     String?   @db.VarChar(255)
+  timestamp     String?   @db.VarChar(255)
+  media_url     String?   @db.VarChar(255)
+  thumbnail_url String?   @db.VarChar(255)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+  profiles      profiles? @relation(fields: [profile_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instagram_media_profile_id_foreign")
+}
+
+model instagram_user_data {
+  id                         String    @id @db.Uuid
+  profile_id                 String?   @db.Uuid
+  account_type               String?   @db.VarChar(255)
+  media_count                String?   @db.VarChar(255)
+  instagram_profile_username String?   @db.VarChar(255)
+  instagram_profile_id       String?   @db.VarChar(255)
+  bio_url                    String?   @db.VarChar(255)
+  created_at                 DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime  @default(now()) @db.Timestamptz(6)
+  profiles                   profiles? @relation(fields: [profile_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instagram_user_data_profile_id_foreign")
+}
+
+model instagramfeatures {
+  id                String   @id @db.Uuid
+  image             String
+  profile_id        String   @db.Uuid
+  feature_requested Boolean? @default(true)
+  feature_posted    Boolean? @default(false)
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model interview {
+  id               String             @id @db.Uuid
+  quote            String?
+  small_image      String?
+  primary_image    String?
+  profile_id       String?            @db.Uuid
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @db.Timestamptz(6)
+  profiles         profiles?          @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "interview_profile_id_foreign")
+  interview_answer interview_answer[]
+}
+
+model interview_answer {
+  id                  String               @id @db.Uuid
+  content             String?              @db.VarChar(300)
+  question_id         String?              @db.Uuid
+  interview_id        String?              @db.Uuid
+  created_at          DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime             @default(now()) @db.Timestamptz(6)
+  interview           interview?           @relation(fields: [interview_id], references: [id], onDelete: Cascade, map: "interview_answer_interview_id_foreign")
+  interview_questions interview_questions? @relation(fields: [question_id], references: [id], onDelete: Cascade, map: "interview_answer_question_id_foreign")
+}
+
+model interview_questions {
+  id               String             @id @db.Uuid
+  title            String             @db.VarChar(255)
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @db.Timestamptz(6)
+  interview_answer interview_answer[]
+}
+
+model invitations {
+  id             String   @id @db.Uuid
+  email          String   @unique(map: "invitations_email_unique")
+  first_name     String
+  token          String
+  second_name    String
+  new_permission String
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model invoices {
+  id          String   @id @db.Uuid
+  etag        String?  @db.VarChar(255)
+  number      Int?
+  order_id    String?  @db.Uuid
+  payout_hash String?  @db.Uuid
+  file        String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model knex_migrations {
+  id             Int       @id @default(autoincrement())
+  name           String?   @db.VarChar(255)
+  batch          Int?
+  migration_time DateTime? @db.Timestamptz(6)
+}
+
+model knex_migrations_lock {
+  index     Int  @id @default(autoincrement())
+  is_locked Int?
+}
+
+model legal {
+  id           Int    @id @default(autoincrement())
+  title        String @unique(map: "legal_title_unique") @db.VarChar(255)
+  html_content String @db.VarChar(100000)
+  image_url    String @db.VarChar(255)
+}
+
+model locations {
+  id           String   @id @db.Uuid
+  city         String?
+  zipcode      String?
+  country      String?
+  verification String?
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime @default(now()) @db.Timestamptz(6)
+  addressLine1 String?  @db.VarChar(255)
+  addressLine2 String?  @db.VarChar(255)
+  state        String?  @db.VarChar(255)
+  latitude     Decimal? @db.Decimal(10, 6)
+  longitude    Decimal? @db.Decimal(10, 6)
+}
+
+model manual_shipments_confirm {
+  id                    String   @id @db.Uuid
+  order_id              String?  @db.Uuid
+  artwork_id            String   @db.Uuid
+  seller_profile_id     String   @db.Uuid
+  buyer_profile_id      String   @db.Uuid
+  from_address          String
+  to_address            String
+  artwork_parameters    String
+  selected_service      String
+  selected_service_code String
+  shipment_price        Decimal  @db.Decimal(12, 2)
+  tracker_id            String?
+  delivery_company      String?
+  tracker_link          String?
+  is_checkout           Boolean? @default(false)
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model master_access_urls {
+  id          String      @id @db.Uuid
+  profile_id  String      @db.Uuid
+  url_id      String      @db.Uuid
+  profiles    profiles    @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "master_access_urls_profile_id_foreign")
+  master_urls master_urls @relation(fields: [url_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "master_access_urls_url_id_foreign")
+
+  @@unique([profile_id, url_id], map: "master_access_urls_profile_id_url_id_unique")
+}
+
+model master_urls {
+  id                 String               @id @db.Uuid
+  url                String               @db.VarChar(255)
+  master_access_urls master_access_urls[]
+}
+
+model media {
+  id            String          @id @db.Uuid
+  index         Int             @default(0)
+  path          String
+  srcset        String?
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime        @default(now()) @db.Timestamptz(6)
+  artwork_media artwork_media[] @ignore
+  blog_media    blog_media[]    @ignore
+  profile_media profile_media[] @ignore
+}
+
+model mediums {
+  id     Int     @id @default(autoincrement())
+  medium String?
+}
+
+model messages {
+  id             String    @id @db.Uuid
+  message        String
+  subject        String?
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+  using_template Boolean?
+  profile_id     String?   @db.Uuid
+  profiles       profiles? @relation(fields: [profile_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "messages_profile_id_foreign")
+}
+
+model modals {
+  id               String  @id @db.Uuid
+  name             String?
+  description      String?
+  content_media_id String? @db.Uuid
+}
+
+model newsletter_subscription {
+  uuid             String    @id @db.Uuid
+  profile_id       String?   @db.Uuid
+  email            String    @unique(map: "newsletter_subscription_email_unique") @db.VarChar(255)
+  first_name       String?   @db.VarChar(255)
+  last_name        String?   @db.VarChar(255)
+  country          String?   @db.VarChar(255)
+  is_verified      Boolean?  @default(false)
+  is_subscribed    Boolean?  @default(false)
+  date_add         DateTime? @default(now()) @db.Timestamptz(6)
+  date_expired     DateTime? @db.Timestamptz(6)
+  unsubscribe_date DateTime? @db.Timestamptz(6)
+  profiles         profiles? @relation(fields: [profile_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "newsletter_subscription_profile_id_foreign")
+}
+
+model newsletters {
+  id               String   @id @db.Uuid
+  checked_artists  String?
+  checked_artworks String?
+  title            String?
+  text             String?
+  img_link         String?
+  attachment       Boolean? @default(false)
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime @default(now()) @db.Timestamptz(6)
+  button_name      String?
+  button_link      String?
+}
+
+model notifications {
+  id         String   @id @db.Uuid
+  type       String?
+  title      String?
+  text       String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model offers {
+  id                            String    @id @db.Uuid
+  from_location                 String    @db.Uuid
+  to_location                   String    @db.Uuid
+  from_account                  String    @db.Uuid
+  to_account                    String    @db.Uuid
+  artwork_id                    String    @db.Uuid
+  price                         Decimal?  @default(0) @db.Decimal(12, 2)
+  verification                  String?
+  created_at                    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime  @default(now()) @db.Timestamptz(6)
+  seller_offer_price            Decimal?  @db.Decimal(12, 2)
+  seller_offer_price_updated_at DateTime? @db.Timestamptz(6)
+}
+
+model order_payments {
+  id                    String    @id @db.Uuid
+  order_id              String    @db.Uuid
+  stripe_charge_id      String?
+  stripe_customer_id    String?
+  charged_at            DateTime? @db.Timestamptz(6)
+  created_at            DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime  @default(now()) @db.Timestamptz(6)
+  stripe_source_id      String?   @db.VarChar(255)
+  stripe_refund_id      String?   @db.VarChar(255)
+  refunded_at           DateTime? @db.Timestamptz(6)
+  stripe_payment_method String?   @db.VarChar(255)
+}
+
+model order_payouts {
+  id                 String   @id @db.Uuid
+  account_id         String   @db.Uuid
+  payout_accounts_id String?  @db.Uuid
+  amount             Decimal? @db.Decimal(12, 2)
+  status             String?  @default("pending")
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model orders {
+  id               String    @id @db.Uuid
+  from_location    String    @db.Uuid
+  to_location      String    @db.Uuid
+  from_account     String    @db.Uuid
+  to_account       String    @db.Uuid
+  cancelled_reason String?
+  related          String?
+  verification     String?
+  type             String?
+  price            Decimal?  @db.Decimal(12, 2)
+  shipping_cost    Decimal?  @db.Decimal(12, 2)
+  artwork_id       String?   @db.Uuid
+  paid             DateTime? @db.Timestamptz(6)
+  shipped          DateTime? @db.Timestamptz(6)
+  delivered        DateTime? @db.Timestamptz(6)
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+  is_completed     Boolean?  @default(false)
+  offer_id         String?   @db.Uuid
+  certificated     DateTime? @db.Timestamptz(6)
+  wrapped          DateTime? @db.Timestamptz(6)
+  pickup_scheduled DateTime? @db.Timestamptz(6)
+  is_checkout      Boolean?  @default(false)
+  tracker_id       String?
+  courier_arrival  DateTime? @db.Timestamptz(6)
+  is_accepted      Boolean?  @default(false)
+  fee              Decimal?  @db.Decimal(12, 2)
+  payout_id        String?   @db.Uuid
+}
+
+model password_reset {
+  id           String    @id @db.Uuid
+  profile_id   String    @db.Uuid
+  token        String    @db.VarChar(255)
+  date_expired DateTime  @db.Timestamptz(6)
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  profiles     profiles  @relation(fields: [profile_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "password_reset_profile_id_foreign")
+}
+
+model payments {
+  id             String   @id @db.Uuid
+  payment_id     String   @db.Uuid
+  payment_system String
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model payout_accounts {
+  id              String   @id @db.Uuid
+  account_id      String   @db.Uuid
+  payment_system  String
+  payment_account String?
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model permission_roles {
+  id               String             @id @db.Uuid
+  name             String             @db.VarChar(255)
+  permission_rules permission_rules[]
+}
+
+model permission_rules {
+  id                 String            @id @db.Uuid
+  permission_role_id String?           @db.Uuid
+  rule               String            @db.VarChar(255)
+  permission_roles   permission_roles? @relation(fields: [permission_role_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "permission_rules_permission_role_id_foreign")
+}
+
+model personal_mail_subscriptions {
+  id                   String   @id @db.Uuid
+  artist_profile_id    String   @db.Uuid
+  collector_profile_id String?  @db.Uuid
+  subscriber_email     String
+  is_subscribed        Boolean? @default(false)
+  is_verified          Boolean? @default(false)
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model plans {
+  id             String   @id @db.Uuid
+  name           String
+  stripe_plan_id String?
+  paypal_plan_id String?
+  price          Decimal? @db.Decimal(12, 2)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+  fee            Decimal? @db.Decimal(12, 2)
+  type           String?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model profile_media {
+  profile_id String   @db.Uuid
+  media_id   String   @db.Uuid
+  media      media    @relation(fields: [media_id], references: [id], onDelete: Cascade, map: "profile_media_media_id_foreign")
+  profiles   profiles @relation(fields: [profile_id], references: [id], onDelete: Cascade, map: "profile_media_profile_id_foreign")
+
+  @@ignore
+}
+
+model profilemail {
+  id         String   @id @db.Uuid
+  subject    String
+  body       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model profiles {
+  id                      String                    @id @unique(map: "profiles_id_unique") @db.Uuid
+  account_id              String                    @db.Uuid
+  location_id             String?                   @db.Uuid
+  featured_artwork_id     String?                   @db.Uuid
+  legacy_image_source     String?
+  first_name              String?
+  last_name               String?
+  avatar_url              String?
+  summary                 String?
+  verification            String?
+  old_id                  Int?
+  followers               String?
+  instagram               String?
+  website                 String?
+  featured_scale          Int?
+  featured_left           Int?
+  featured_top            Int?
+  reviewed                Boolean?                  @default(false)
+  username                String?                   @unique(map: "profiles_username_unique")
+  password                String?
+  permission              String?                   @default("user")
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  verified_at             DateTime?                 @db.Timestamp(6)
+  is_artist               Boolean?                  @default(true)
+  legacy_small_image      String?
+  is_activated            Boolean                   @default(false)
+  phone                   String?                   @db.VarChar(255)
+  is_employee             Boolean?
+  employee_id             String?
+  description             String?
+  biography               String?
+  featured_background_url String?
+  small_avatar            String?
+  prev_verification       String?
+  new_permission          String?                   @default("owner")
+  role_changed_to         String?
+  is_username             String?                   @default("default") @db.VarChar(255)
+  rating                  Int?                      @default(0)
+  artworks                artworks[]
+  ateliers                ateliers?
+  instagram_media         instagram_media[]
+  instagram_user_data     instagram_user_data[]
+  interview               interview[]
+  master_access_urls      master_access_urls[]
+  messages                messages[]
+  newsletter_subscription newsletter_subscription[]
+  password_reset          password_reset[]
+  profile_media           profile_media[]           @ignore
+  accounts                accounts                  @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "profiles_account_id_foreign")
+
+  @@index([id, account_id, location_id], map: "profiles_id_account_id_location_id_index")
+}
+
+model publications {
+  id         String  @id @db.Uuid
+  profile_id String  @db.Uuid
+  from       String
+  info       String
+  link       String?
+}
+
+model reviews {
+  id         String   @id @db.Uuid
+  name       String
+  points     Int
+  message    String
+  country    String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model series {
+  id         String   @id @db.Uuid
+  profile_id String?  @db.Uuid
+  name       String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model social_media_content {
+  id                  String                @id @db.Uuid
+  profile_id          String                @db.Uuid
+  image_url           String?
+  instagram           String?
+  country             String?
+  status              String?
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  description         String?
+  social_media_images social_media_images[]
+}
+
+model social_media_images {
+  id                   String               @id @db.Uuid
+  social_media_id      String               @db.Uuid
+  image_url            String
+  social_media_content social_media_content @relation(fields: [social_media_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "social_media_images_social_media_id_foreign")
+}
+
+model stripe_payments {
+  id                String   @id @db.Uuid
+  order_id          String   @db.Uuid
+  stripe_refund_id  String?  @db.Uuid
+  charge_id         String
+  customer_id       String
+  payment_method    String
+  payment_method_id String
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @updatedAt @db.Timestamptz(6)
+}
+
+model stripe_products {
+  id                String   @id @default(uuid(4)) @db.Uuid
+  artwork_id        String   @db.Uuid
+  stripe_product_id String?
+  stripe_sku_id     String?
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @updatedAt @db.Timestamptz(6)
+}
+
+model stripe_refunds {
+  id          String   @id @db.Uuid
+  refund_id   String
+  charge_id   String
+  customer_id String
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model styles {
+  id    Int     @id @default(autoincrement())
+  style String?
+}
+
+model subscription_history {
+  id                 String   @id @db.Uuid
+  account_id         String   @db.Uuid
+  stripe_customer_id String?
+  invoice_id         String?
+  charge_id          String?
+  payment_intend_id  String?
+  subscription_id    String?
+  payment_system     String?
+  billing_reason     String?
+  invoice_number     String?
+  plan_name          String?
+  paid_status        String?
+  invoice_url        String?
+  pdf_url            String?
+  start_date         String?
+  end_date           String?
+  amount             Decimal? @db.Decimal(12, 2)
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime @default(now()) @db.Timestamptz(6)
+  accounts           accounts @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_history_account_id_foreign")
+}
+
+model subscriptions {
+  id                  String    @id @db.Uuid
+  account_id          String    @db.Uuid
+  plan_id             String    @db.Uuid
+  subscription_id     String?
+  subscription_status String?
+  payment_system      String?
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime  @default(now()) @db.Timestamptz(6)
+  checked_at          DateTime? @db.Timestamptz(6)
+  mail_token          String?   @db.VarChar(255)
+}
+
+model subscriptions_events {
+  id             String   @id @db.Uuid
+  account_id     String   @db.Uuid
+  type           String
+  payment_system String
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model subscriptions_transfer_data {
+  id              String   @id @db.Uuid
+  account_id      String   @db.Uuid
+  subscription_id String
+  payment_system  String?
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  session_id      String?
+}
+
+model surfaces {
+  id      Int     @id @default(autoincrement())
+  surface String?
+}
+
+model transactions {
+  id               String  @id @db.Uuid
+  account_id       String? @db.Uuid
+  gross_amount     String?
+  net_amount       String?
+  transaction_date String?
+  payment_system   String?
+  subscription_id  String?
+  payment_type     String?
+  payment_country  String?
+  payment_status   String?
+}
+
+model ups_shipments_confirm {
+  id                    String   @id @db.Uuid
+  order_id              String?  @db.Uuid
+  artwork_id            String   @db.Uuid
+  seller_profile_id     String   @db.Uuid
+  buyer_profile_id      String   @db.Uuid
+  from_address          String
+  to_address            String
+  artwork_parameters    String
+  selected_service      String
+  selected_service_code String
+  shipment_price        String
+  shipment_id           String
+  shipment_digest       String
+  is_checkout           Boolean? @default(false)
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime @default(now()) @db.Timestamptz(6)
+  status                String?
+  status_response       String?
+}
+
+model user_cart {
+  id         String   @id @db.Uuid
+  profile_id String?  @db.Uuid
+  hash       String?  @db.VarChar(255)
+  is_open    Boolean? @default(true)
+}
+
+model user_notifications {
+  id              String   @id @db.Uuid
+  profile_id      String   @db.Uuid
+  notification_id String   @db.Uuid
+  reviewed        Boolean? @default(false)
+}
+
+model wrapped_photos {
+  id         String    @id @db.Uuid
+  artwork_id String    @db.Uuid
+  order_id   String    @db.Uuid
+  photo_url  String
+  step       String
+  status     String?
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime  @default(now()) @db.Timestamptz(6)
+  size       Int?
+  name       String?
+  notified   DateTime? @db.Timestamptz(6)
+}
