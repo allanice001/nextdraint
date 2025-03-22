@@ -1,141 +1,16 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {Suspense, useEffect, useState} from "react";
+import {Suspense} from "react";
 import FeaturedArtworks from "@/components/featured-artworks";
-import {
-  Carousel, CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
-import Autoplay from "embla-carousel-autoplay";
+import FeaturedSlides from "@/components/home/featured-slides";
 
 export default function Home() {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
 
-  useEffect(() => {
-    if (!api) {
-      return
-    }
 
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
 
   return (
     <main className="flex min-h-screen flex-col">
-      {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-purple-50 to-white">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Discover Original Art Online
-                </h1>
-                <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Connect with talented artists worldwide. Buy original
-                  paintings, support creators, and transform your space.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  <Link href="/artworks">Explore Artworks</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/artists">Meet Our Artists</Link>
-                </Button>
-              </div>
-            </div>
-            <div className="mx-auto w-full max-w-[500px] relative aspect-square rounded-xl overflow-hidden shadow-xl">
-              {/*
-
-              */}
-              <Carousel
-                setApi={setApi}
-                className="w-full"
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                plugins={[
-                  Autoplay({
-                    delay: 2000,
-                  }),
-                ]}
-              >
-                <CarouselContent>
-                  <CarouselItem>
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <Image
-                          src="https://media.draintart.gallery/media/artworks/2021/08/05/89c746a9-0ec1-414e-94d1-9b8ac5e5a166/1628192845519-ed6621e7-c553-421d-965d-8b74d8e816ff/276.jpeg"
-                          alt="Featured artwork"
-                          className="object-cover"
-                          fill
-                          priority
-                        />
-                      </CardContent>
-                      <CardFooter>
-                        Side {current} of {count}
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                  <CarouselItem>
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <Image
-                          src="https://media-draint-art-ams3.ams3.digitaloceanspaces.com/media/artworks/2022/01/13/dbe44c1e-1963-48e1-8532-98e601f00224/1642070904789-cada58b0-7f6d-4938-b61d-7d5beea93dfa/276.jpeg"
-                          alt="Featured artwork"
-                          className="object-cover"
-                          fill
-                          priority
-                        />
-                      </CardContent>
-                      <CardFooter>
-                        Side {current} of {count}
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                  <CarouselItem>
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <Image
-                          src="https://media-draint-art-ams3.ams3.digitaloceanspaces.com/media/artworks/2022/01/29/428e5cef-052c-45da-ad24-0d365b390f56/1643489477591-34d6c608-14d9-4948-a3a8-8ad1d14efb5f/1620.jpeg"
-                          alt="Featured artwork"
-                          className="object-cover"
-                          fill
-                          priority
-                        />
-                      </CardContent>
-                      <CardFooter>
-                        Side {current} of {count}
-                      </CardFooter>
-                    </Card>
-                  </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeaturedSlides />
 
       {/* Featured Artworks */}
       <section className="w-full py-12 bg-white">
