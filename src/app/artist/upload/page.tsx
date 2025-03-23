@@ -36,9 +36,9 @@ export default async function UploadArtworkPage() {
 
 				<ArtworkUploadForm
 					categories={categoriesResult}
-					mediums={mediumsResult.success ? mediumsResult.mediums : []}
-					styles={stylesResult.success ? stylesResult.styles : []}
-					surfaces={surfacesResult.success ? surfacesResult.surfaces : []}
+					mediums={mediumsResult.success && mediumsResult.mediums ? mediumsResult.mediums : []}
+					styles={stylesResult.success && stylesResult.styles ? stylesResult.styles : []}
+					surfaces={surfacesResult.success && surfacesResult.surfaces ? surfacesResult.surfaces : []}
 				/>
 			</div>
 		</div>

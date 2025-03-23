@@ -1,126 +1,147 @@
-"use client";
-
-import { Suspense } from "react";
-import FeaturedArtworks from "@/components/featured-artworks";
 import FeaturedSlides from "@/components/home/featured-slides";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import {ArtworkGrid} from "@/components/artwork/artwork-grid";
+import {getArtworks, getFeaturedArtists} from "@/lib/data";
 
-export default function Home() {
+export default async function Home() {
+  const [trendingArtworks, featuredArtists] = await Promise.all([getArtworks(6), getFeaturedArtists(6)])
+
   return (
     <main className="flex min-h-screen flex-col">
+      {/* Hero Section */}
       <FeaturedSlides />
 
-      {/* Featured Artworks */}
-      <section className="w-full py-12 bg-white">
+      {/* Trending Section */}
+      <section className="py-12 md:py-16">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Featured Artworks
-              </h2>
-              <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                Discover handpicked creations from our talented artists
-              </p>
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center mb-8">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Trending Artwork</h2>
+              <p className="text-muted-foreground">Explore the latest artwork trending on Draint</p>
             </div>
+            <Button asChild variant="outline">
+              <Link href="/artworks">View All</Link>
+            </Button>
           </div>
-          <Suspense
-            fallback={
-              <div className="flex justify-center py-12">
-                <div className="animate-spin h-8 w-8 border-4 border-purple-500 rounded-full border-t-transparent"></div>
-              </div>
-            }
-          >
-            <FeaturedArtworks />
-          </Suspense>
+          <ArtworkGrid artworks={trendingArtworks} />
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
+      {/* Featured Artists */}
+      <section className="py-12 md:py-16 bg-muted/30">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Why Choose Draint
-              </h2>
-              <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                We connect art lovers with unique original pieces while
-                supporting sustainable practices
-              </p>
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center mb-8">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Featured Artists</h2>
+              <p className="text-muted-foreground">Discover amazing creators and their work</p>
             </div>
+            <Button asChild variant="outline">
+              <Link href="/artists">View All Artists</Link>
+            </Button>
           </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-12 mt-8">
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="rounded-full bg-purple-100 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-purple-600 h-6 w-6"
+
+          {featuredArtists.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              {featuredArtists.map((artist) => (
+                <Link
+                  key={artist.id}
+                  href={`/artist/${artist.id}`}
+                  className="group relative flex flex-col items-center text-center"
                 >
-                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                  <circle cx="9" cy="9" r="2" />
-                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold">Original Artwork</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-center">
-                Every piece on our platform is an original creation directly
-                from the artist.
-              </p>
+                  <div className="relative h-32 w-32 overflow-hidden rounded-full mb-3 border-2 border-background group-hover:border-primary transition-colors">
+                    <Image
+                      src={
+                        artist.image ||
+                        `/placeholder.svg?height=200&width=200&text=${encodeURIComponent(artist.name || "Artist")}`
+                      }
+                      width={200}
+                      height={200}
+                      alt={artist.name || "Artist"}
+                      className="object-cover"
+                    />
+                  </div>
+                  <h3 className="font-medium">{artist.name || "Anonymous Artist"}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Some Data HERE
+                  </p>
+                </Link>
+              ))}
             </div>
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="rounded-full bg-purple-100 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-purple-600 h-6 w-6"
-                >
-                  <path d="M7 10v12" />
-                  <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold">Fair Compensation</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-center">
-                Artists receive fair payment for their work through our
-                transparent marketplace.
-              </p>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">No featured artists available</p>
             </div>
-            <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-              <div className="rounded-full bg-purple-100 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-purple-600 h-6 w-6"
-                >
-                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
+          )}
+        </div>
+      </section>
+
+
+      {/* How It Works */}
+      <section className="py-12 md:py-24">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center text-center mb-12">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl mb-2">How It Works</h2>
+            <p className="text-muted-foreground max-w-[800px]">
+              Draint makes it simple to create, buy, and sell digital art
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Create & Upload",
+                description: "Create your artwork and upload it to your portfolio",
+              },
+              {
+                title: "List & Sell",
+                description: "Set your price and list your artwork for sale",
+              },
+              {
+                title: "Collect & Trade",
+                description: "Build your collection and trade with other collectors",
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+                  <span className="text-xl font-bold text-primary">{i + 1}</span>
+                </div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-muted-foreground">{item.description}</p>
               </div>
-              <h3 className="text-xl font-bold">Eco-Friendly</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-center">
-                We contribute 1% of each payment to remove CO₂ from the
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Environmental Impact */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container px-4 md:px-6">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl mb-4">Art with Environmental Impact</h2>
+              <p className="mb-4">
+                We believe in sustainable art. That&#39;s why Draint contributes 1% of every payment to remove CO₂ from the
                 atmosphere.
               </p>
+              <p className="mb-6">
+                Join us in our mission to support both artists and the environment through beautiful digital creations.
+              </p>
+              <Button asChild>
+                <Link href="/impact">Learn More</Link>
+              </Button>
+            </div>
+            <div className="flex justify-center order-1 lg:order-2">
+              <div className="w-full max-w-md aspect-video relative">
+                <Image
+                  src="/placeholder.svg?height=400&width=600&text=Environmental+Impact"
+                  width={600}
+                  height={400}
+                  alt="Environmental Impact"
+                  className="rounded-lg shadow-lg"
+                />
+              </div>
             </div>
           </div>
         </div>

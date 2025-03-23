@@ -105,7 +105,6 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 						</div>
 						<div className="flex items-baseline gap-2">
 							<span className="text-3xl font-bold">{formatPrice(artwork.price.toString(), artwork.currency)}</span>
-							{artwork.currency === "ETH" && <span className="text-muted-foreground">≈ $1,420 USD</span>}
 						</div>
 					</div>
 

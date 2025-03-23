@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"
+export const runtime = "nodejs"
+
 import { type NextRequest, NextResponse } from "next/server"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import { auth } from "@/lib/auth-utils"
@@ -67,11 +70,5 @@ export async function POST(request: NextRequest) {
 		console.error("Error uploading file:", error)
 		return NextResponse.json({ error: "Failed to upload file" }, { status: 500 })
 	}
-}
-
-export const config = {
-	api: {
-		bodyParser: false,
-	},
 }
 
