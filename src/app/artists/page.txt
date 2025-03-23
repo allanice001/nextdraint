@@ -1,0 +1,68 @@
+import { Suspense } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { getArtists } from "@/lib/artists"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import Pagination from "@/components/pagination"
+
+export default async function ArtistsPage({
+	                                          searchParams,
+                                          }: {
+	searchParams: { page?: string }
+}) {
+	const page = searchParams.page ? Number.parseInt(searchParams.page) : 1
+	const { artists, totalPages } = await getArtists({ page, limit: 12 })
+
+	return (
+		<div className="container px-4 py-8 md:py-12">
+			<h1 className="text-3xl font-bold mb-8">Artists</h1>
+			<Suspense fallback={<ArtistsSkeleton />}>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+					{artists.map((artist) => (
+						<Card key={artist.id} className="overflow-hidden">
+							<Link href={`/artists/${artist.id}`}>
+								<div className="relative aspect-square overflow-hidden">
+									<Image
+										src={artist.image}
+										alt={artist.first_name + ' ' + artist.last_name}
+										fill
+										className="object-cover transition-transform hover:scale-105"
+									/>
+								</div>
+							</Link>
+							<CardContent className="p-4">
+								<Link href={`/artists/${artist.id}`} className="font-medium hover:underline">
+									{artist.first_name} {artist.last_name}
+								</Link>
+							</CardContent>
+						</Card>
+					))}
+				</div>
+
+				{totalPages > 1 && (
+					<div className="mt-8 flex justify-center">
+						<Pagination currentPage={page} totalPages={totalPages} basePath="/artists" />
+					</div>
+				)}
+			</Suspense>
+		</div>
+	)
+}
+
+function ArtistsSkeleton() {
+	return (
+		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+			{Array(12)
+				.fill(0)
+				.map((_, i) => (
+					<div key={i} className="space-y-3">
+						<Skeleton className="h-[300px] w-full rounded-lg" />
+						<Skeleton className="h-4 w-3/4" />
+						<Skeleton className="h-4 w-1/2" />
+					</div>
+				))}
+		</div>
+	)
+}
+

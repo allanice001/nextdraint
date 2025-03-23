@@ -1,0 +1,24 @@
+update profiles set password='test'  where password is null
+
+select id, email, created_at from accounts where email like 'pinsoart287@gmail.com'
+select email, count(email) from accounts group by email having count(email) >1
+
+update accounts set email = 'bboyrbouallagui+draint@gmail.com' where id='9b7aee7c-64b7-4cd7-b089-02363797a034'
+update accounts set email = 'rolljacker24+draint@gmail.com' where id='730bce23-fb1b-4384-a3e7-77e3a9e0a5f9'
+update accounts set email = 'coalart64+draint@gmail.com' where id='430e9cb3-4900-4ba5-a23a-75ef314ec1a2'
+update accounts set email = 'gilchristk97+draint1@gmail.com' where id='f000ce2a-f907-45f1-8653-e9c1a348e1cc'
+update accounts set email = 'gilchristk97+draint2@gmail.com' where id='a902f564-7ae9-4779-a7d7-c72e1a9e152e'
+update accounts set email = 'gilchristk97+draint3@gmail.com' where id='87db16af-9ed5-4bce-a1f3-1655b9775dc4'
+update accounts set email = 'gilchristk97+draint4@gmail.com' where id='b12dd402-3a71-4cfa-b490-59933f61a764'
+update accounts set email = 'gilchristk97+draint5@gmail.com' where id='a27c51ab-aba4-4abe-90c3-6808dd36dd9c'
+update accounts set email = 'gilchristk97+draint6@gmail.com' where id='d73a30fa-4710-4370-ba44-9429a647555d'
+update accounts set email = 'gilchristk97+draint7@gmail.com' where id='268cfe65-72c1-4702-a72f-18a2a7b348ac'
+update accounts set email = 'gilchristk97+draint8@gmail.com' where id='78711d44-4fd3-47d2-9edd-ff7dcd0d840b'
+update accounts set email = 'gilchristk97+draint9@gmail.com' where id='b474c30d-c1fc-4339-a60f-69f1aea15e53'
+update accounts set email = 'marina.bucco+draint@gmail.com' where id='00166483-706b-47b2-81c5-067758fe58fe';
+update accounts set email = 'utaellamarie.peter+draint@t-online.de' where id='8271fc15-e11d-472f-8ddb-8df7e8264d36';
+update accounts set email = 'pinsoart287+draint@gmail.com' where id='d630bcf3-a191-4aed-a406-7d15adfd345e';
+
+
+
+update accounts set profiles_id = gen_random_uuid();
