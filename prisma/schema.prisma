@@ -85,15 +85,24 @@ model PasswordResetToken {
 
 // Artwork model
 model Artwork {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
-  description String?  @db.Text
+  description String?    @db.Text
   image       String
-  price       Decimal  @db.Decimal(10, 2)
-  currency    String   @default("ETH")
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  price       Decimal    @db.Decimal(10, 2)
+  currency    Currencies @default(EUR)
+  weight      Int?
+  height      Int?
+  thickness   Int?
+  duration    BigInt?
+  completed   BigInt?
+  sold        Boolean    @default(false)
+  medium_id   String
+  surface_id  String
+  style_id    String
+  published   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   userId      String
 
   // Relations
@@ -103,7 +112,40 @@ model Artwork {
   favorites   Favorite[]
   comments    Comment[]
   collections CollectionArtwork[]
+  medium      Mediums             @relation(fields: [medium_id], references: [id], onDelete: Cascade)
+  surface     Surfaces            @relation(fields: [surface_id], references: [id], onDelete: Cascade)
+  style       Styles              @relation(fields: [style_id], references: [id], onDelete: Cascade)
   orderItems  OrderItem[]
+}
+
+enum Currencies {
+  EUR
+  USD
+  GBP
+}
+
+model Mediums {
+  id        String    @id @default(cuid())
+  medium    String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Artwork   Artwork[]
+}
+
+model Styles {
+  id        String    @id @default(cuid())
+  style     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Artwork   Artwork[]
+}
+
+model Surfaces {
+  id        String    @id @default(cuid())
+  surface   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Artwork   Artwork[]
 }
 
 // Category model for artwork categorization
