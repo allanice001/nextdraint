@@ -1,0 +1,53 @@
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
+
+export async function GET(request: Request) {
+	try {
+		const { searchParams } = new URL(request.url)
+		const query = searchParams.get("q")
+
+		if (!query) {
+			return NextResponse.json({ error: "Search query is required" }, { status: 400 })
+		}
+
+		// Search artworks
+		const artworksPromise = prisma.artworks.findMany({
+			where: {
+				OR: [
+					{ title: { contains: query, mode: "insensitive" } },
+					{ description: { contains: query, mode: "insensitive" } },
+					{ medium: { contains: query, mode: "insensitive" } },
+					{ style: { contains: query, mode: "insensitive" } },
+				],
+				sold: false,
+			},
+			take: 12,
+		})
+
+		// Search artists
+		const artistsPromise = prisma.profiles.findMany({
+			where: {
+				OR: [
+					{ first_name: { contains: query, mode: "insensitive" } },
+					{ last_name: { contains: query, mode: "insensitive" } },
+					{ username: { contains: query, mode: "insensitive" } },
+					{ biography: { contains: query, mode: "insensitive" } },
+				],
+			},
+			take: 12,
+		})
+
+		const [artworks, artists] = await Promise.all([artworksPromise, artistsPromise])
+
+		const results = {
+			artworks,
+			artists,
+		}
+
+		return NextResponse.json(results)
+	} catch (error) {
+		console.error("Search error:", error)
+		return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 })
+	}
+}
+

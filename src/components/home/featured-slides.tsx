@@ -11,7 +11,10 @@ async function getSlides() {
 				: ""
 
 		const res = await fetch(`${baseUrl}/api/site/slides`, {
-			cache: "no-store", // Don't cache this data
+			cache: "force-cache",
+			headers: {
+				"Cache-Control": "public, max-age=600, s-maxage=600"
+			}
 		})
 
 		if (!res.ok) {
@@ -31,7 +34,6 @@ export default async function FeaturedSlides() {
 	return (
 		<section className="w-full py-12">
 			<div className="container px-4">
-				<h2 className="text-3xl font-bold tracking-tight mb-8">Featured Artworks</h2>
 				<Suspense fallback={<SlidesSkeleton />}>
 					<InfiniteCarousel slides={slides} />
 				</Suspense>

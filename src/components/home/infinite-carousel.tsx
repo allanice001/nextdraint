@@ -94,7 +94,7 @@ export function InfiniteCarousel({ slides }: InfiniteCarouselProps) {
 			onMouseEnter={pauseAutoAdvance}
 			onMouseLeave={resumeAutoAdvance}
 		>
-			<div className="relative w-full" style={{ height: "500px" }}>
+			<div className="relative w-full items-center justify-center" style={{ height: "500px" }}>
 				{slides.map((slide, index) => (
 					<div
 						key={slide.id}
@@ -113,13 +113,16 @@ export function InfiniteCarousel({ slides }: InfiniteCarouselProps) {
 							}}
 						/>
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8 text-white">
-							{slide.author && <p className="text-sm font-medium mb-1">{slide.author}</p>}
-							<h3 className="text-2xl md:text-3xl font-bold mb-2">{slide.title}</h3>
+							<h2 className="max-w-[550px] text-[44px] leading-[50px]">{slide.title}</h2>
 							{slide.button && (
 								<Link href={slide.url || "#"}>
 									<Button className="mt-4 bg-purple-600 hover:bg-purple-700">{slide.button}</Button>
 								</Link>
 							)}
+
+							{slide.author && <p className="text-sm font-medium mb-1">Artwork - <b>{slide.name}</b> by {slide.author}</p>}
+
+
 						</div>
 					</div>
 				))}
