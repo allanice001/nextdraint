@@ -9,6 +9,7 @@ import { AuthProvider } from "@/components/auth-provider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import {Toaster} from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
           </AuthProvider>
         </ThemeProvider>
       <Toaster closeButton richColors position='top-center' toastOptions={{duration: 3000}} />
+      <Analytics/>
       </body>
     </html>
   );
