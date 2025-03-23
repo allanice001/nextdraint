@@ -12,9 +12,6 @@ async function getSlides() {
 
     const res = await fetch(`${baseUrl}/api/site/slides`, {
       cache: "force-cache",
-      headers: {
-        "Cache-Control": "public, max-age=600, s-maxage=600",
-      },
     });
 
     if (!res.ok) {
