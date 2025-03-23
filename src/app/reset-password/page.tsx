@@ -71,6 +71,7 @@ export default function ResetPasswordPage() {
 				})
 			}
 		} catch (error) {
+			console.error(error)
 			toast.error("Something went wrong", {
 				description: "Please try again later",
 			})
