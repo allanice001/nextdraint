@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 const navigation = [
   { name: "Artists", href: "/artists" },
@@ -84,27 +85,12 @@ export default function Header({ session }: { session: Session | null }) {
 
         <Link href="/" className="flex items-center mr-6">
           <div className="relative h-10 w-24">
-            <svg
-              viewBox="0 0 100 40"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-full w-full"
-            >
-              <text
-                x="10"
-                y="30"
-                fontFamily="Arial"
-                fontSize="24"
-                fontWeight="bold"
-              >
-                dra<tspan fill="#7C3AED">i</tspan>nt
-              </text>
-              <path
-                d="M65 32c0 3.314-2.686 6-6 6s-6-2.686-6-6"
-                stroke="#7C3AED"
-                strokeWidth="2"
-                fill="none"
-              />
-            </svg>
+            <Image
+              width="96"
+              height="40"
+              alt="Logo"
+              src="https://media.draintart.gallery/media/static/image/c29cea01-f05c-426e-bf96-eeb94b526534/source.png"
+            />
           </div>
         </Link>
 
