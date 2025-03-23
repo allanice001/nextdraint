@@ -1,13 +1,10 @@
 "use client";
 
-import {Suspense} from "react";
+import { Suspense } from "react";
 import FeaturedArtworks from "@/components/featured-artworks";
 import FeaturedSlides from "@/components/home/featured-slides";
 
 export default function Home() {
-
-
-
   return (
     <main className="flex min-h-screen flex-col">
       <FeaturedSlides />

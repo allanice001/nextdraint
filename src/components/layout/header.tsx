@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ShoppingCart, Menu, X, Search, User } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ShoppingCart, Menu, X, Search, User } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,20 +15,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {Session} from "next-auth";
-import {signOut} from "next-auth/react";
+} from "@/components/ui/dropdown-menu";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 const navigation = [
   { name: "Artists", href: "/artists" },
   { name: "Artworks", href: "/artworks" },
   { name: "Trade", href: "/trade" },
   { name: "Pricing", href: "/pricing" },
-]
+];
 
-export default function Header({session}: {session: Session | null}) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const pathname = usePathname()
+export default function Header({ session }: { session: Session | null }) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const pathname = usePathname();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
       <div className="container flex h-16 items-center px-4 sm:px-6">
@@ -53,11 +54,17 @@ export default function Header({session}: {session: Session | null}) {
               <div className="flex flex-col gap-2 mt-4">
                 {session?.user ? (
                   <>
-                    <div className="text-sm text-gray-500 mb-2">Signed in as {session.user.email}</div>
+                    <div className="text-sm text-gray-500 mb-2">
+                      Signed in as {session.user.email}
+                    </div>
                     <Button asChild className="w-full" variant="outline">
                       <Link href="/profile">My Profile</Link>
                     </Button>
-                    <Button className="w-full" variant="destructive" onClick={() => signOut()}>
+                    <Button
+                      className="w-full"
+                      variant="destructive"
+                      onClick={() => signOut()}
+                    >
                       Sign out
                     </Button>
                   </>
@@ -78,12 +85,12 @@ export default function Header({session}: {session: Session | null}) {
 
         <Link href="/" className="flex items-center mr-6">
           <div className="relative h-10 w-24">
-            <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-              <text x="10" y="30" fontFamily="Arial" fontSize="24" fontWeight="bold">
-                dra<tspan fill="#7C3AED">i</tspan>nt
-              </text>
-              <path d="M65 32c0 3.314-2.686 6-6 6s-6-2.686-6-6" stroke="#7C3AED" strokeWidth="2" fill="none" />
-            </svg>
+            <Image
+              width="96"
+              height="40"
+              alt="Logo"
+              src="https://media.draintart.gallery/media/static/image/c29cea01-f05c-426e-bf96-eeb94b526534/source.png"
+            />
           </div>
         </Link>
 
@@ -96,16 +103,28 @@ export default function Header({session}: {session: Session | null}) {
               autoFocus
               onBlur={() => setIsSearchOpen(false)}
             />
-            <Button variant="ghost" size="icon" className="ml-2" onClick={() => setIsSearchOpen(false)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-2"
+              onClick={() => setIsSearchOpen(false)}
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
         ) : (
           <div className="hidden md:flex flex-1 items-center">
-            <Button variant="ghost" size="icon" className="mr-2" onClick={() => setIsSearchOpen(true)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-2"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search className="h-4 w-4" />
             </Button>
-            <span className="text-sm text-gray-400">Search for artist, style, country, tag...</span>
+            <span className="text-sm text-gray-400">
+              Search for artist, style, country, tag...
+            </span>
           </div>
         )}
 
@@ -117,7 +136,9 @@ export default function Header({session}: {session: Session | null}) {
                 href={item.href}
                 className={cn(
                   "transition-colors hover:text-purple-600",
-                  pathname === item.href ? "text-purple-600 font-semibold" : "text-gray-600",
+                  pathname === item.href
+                    ? "text-purple-600 font-semibold"
+                    : "text-gray-600",
                 )}
               >
                 {item.name}
@@ -146,7 +167,9 @@ export default function Header({session}: {session: Session | null}) {
                     <Link href="/favorites">Favorites</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Sign out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -154,7 +177,11 @@ export default function Header({session}: {session: Session | null}) {
                 <Button asChild variant="outline" size="sm">
                   <Link href="/login">Log in</Link>
                 </Button>
-                <Button asChild size="sm" className="bg-purple-600 hover:bg-purple-700">
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
                   <Link href="/signup">Sign Up!</Link>
                 </Button>
               </>
@@ -180,6 +207,5 @@ export default function Header({session}: {session: Session | null}) {
         </Button>
       </div>
     </header>
-  )
+  );
 }
-
