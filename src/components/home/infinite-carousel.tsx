@@ -108,15 +108,13 @@ export function InfiniteCarousel({ slides }: InfiniteCarouselProps) {
             }`}
           >
             <Image
-              src={
-                slide.primary_image || "/placeholder.svg?height=800&width=1200"
-              }
+              src={slide.primary_image || "//placehold.co/800x1200"}
               alt={slide.title || "Featured artwork"}
               fill
               className="object-cover"
               priority={index === 0}
               onError={(e) => {
-                e.currentTarget.src = "/placeholder.svg?height=800&width=1200";
+                e.currentTarget.src = "//placehold.co/800x1200";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8 text-white">

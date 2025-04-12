@@ -14,7 +14,7 @@ const ARTWORKS = [
     title: "Abstract Harmony",
     artist: "Elena Martinez",
     price: 450,
-    imageUrl: "/placeholder.svg?height=400&width=300",
+    imageUrl: "//placehold.co/300x400",
     artistId: "elena-martinez",
   },
   {
@@ -22,7 +22,7 @@ const ARTWORKS = [
     title: "Urban Reflections",
     artist: "Marcus Chen",
     price: 620,
-    imageUrl: "/placeholder.svg?height=400&width=300",
+    imageUrl: "//placehold.co/300x400",
     artistId: "marcus-chen",
   },
   {
@@ -30,7 +30,7 @@ const ARTWORKS = [
     title: "Coastal Dreams",
     artist: "Sophie Williams",
     price: 380,
-    imageUrl: "/placeholder.svg?height=400&width=300",
+    imageUrl: "//placehold.co/300x400",
     artistId: "sophie-williams",
   },
   {
@@ -38,7 +38,7 @@ const ARTWORKS = [
     title: "Misty Mountains",
     artist: "David Kim",
     price: 550,
-    imageUrl: "/placeholder.svg?height=400&width=300",
+    imageUrl: "//placehold.co/300x400",
     artistId: "david-kim",
   },
 ];
@@ -58,7 +58,7 @@ export default function FeaturedArtworks() {
             <Link href={`/artworks/${artwork.id}`}>
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
-                  src={artwork.imageUrl || "/placeholder.svg"}
+                  src={artwork.imageUrl || "//placehold.co/300x400"}
                   alt={artwork.title}
                   fill
                   className="object-cover transition-transform hover:scale-105"

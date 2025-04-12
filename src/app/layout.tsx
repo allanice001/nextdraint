@@ -8,8 +8,9 @@ import { ReactNode } from "react";
 import { AuthProvider } from "@/components/auth-provider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import {Toaster} from "@/components/ui/sonner";
-import { Analytics } from "@vercel/analytics/react"
+import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +30,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          inter.className,
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -44,8 +50,13 @@ export default async function RootLayout({
             </div>
           </AuthProvider>
         </ThemeProvider>
-      <Toaster closeButton richColors position='top-center' toastOptions={{duration: 3000}} />
-      <Analytics/>
+        <Toaster
+          closeButton
+          richColors
+          position="top-center"
+          toastOptions={{ duration: 3000 }}
+        />
+        <Analytics />
       </body>
     </html>
   );

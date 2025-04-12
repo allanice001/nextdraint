@@ -1,17 +1,17 @@
-import { prisma } from "@/lib/prisma"
-import type { Artwork, Category, User } from "@prisma/client"
+import { prisma } from "@/lib/prisma";
+import type { Artwork, Category, User } from "@prisma/client";
 
 export type ArtworkWithArtist = Artwork & {
   user: {
-    id: string
-    name: string | null
-    image: string | null
-  }
-}
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+};
 
 export type ArtworkWithDetails = ArtworkWithArtist & {
-  categories: Category[]
-}
+  categories: Category[];
+};
 
 export async function getArtworks(limit = 6): Promise<ArtworkWithArtist[]> {
   try {
@@ -32,14 +32,16 @@ export async function getArtworks(limit = 6): Promise<ArtworkWithArtist[]> {
         createdAt: "desc",
       },
       take: limit,
-    })
+    });
   } catch (error) {
-    console.error("Error fetching artworks:", error)
-    return []
+    console.error("Error fetching artworks:", error);
+    return [];
   }
 }
 
-export async function getArtworkById(id: string): Promise<ArtworkWithDetails | null> {
+export async function getArtworkById(
+  id: string,
+): Promise<ArtworkWithDetails | null> {
   try {
     return await prisma.artwork.findUnique({
       where: {
@@ -55,10 +57,10 @@ export async function getArtworkById(id: string): Promise<ArtworkWithDetails | n
         },
         categories: true,
       },
-    })
+    });
   } catch (error) {
-    console.error(`Error fetching artwork with id ${id}:`, error)
-    return null
+    console.error(`Error fetching artwork with id ${id}:`, error);
+    return null;
   }
 }
 
@@ -87,10 +89,10 @@ export async function getArtworksByArtist(
         createdAt: "desc",
       },
       take: limit,
-    })
+    });
   } catch (error) {
-    console.error(`Error fetching artworks by artist ${artistId}:`, error)
-    return []
+    console.error(`Error fetching artworks by artist ${artistId}:`, error);
+    return [];
   }
 }
 
@@ -100,7 +102,7 @@ export async function getSimilarArtworks(
   limit = 4,
 ): Promise<ArtworkWithArtist[]> {
   try {
-    if (!categoryIds.length) return []
+    if (!categoryIds.length) return [];
 
     return await prisma.artwork.findMany({
       where: {
@@ -125,10 +127,10 @@ export async function getSimilarArtworks(
         createdAt: "desc",
       },
       take: limit,
-    })
+    });
   } catch (error) {
-    console.error(`Error fetching similar artworks:`, error)
-    return []
+    console.error(`Error fetching similar artworks:`, error);
+    return [];
   }
 }
 
@@ -159,10 +161,10 @@ export async function getFeaturedArtists(limit = 6): Promise<User[]> {
         },
       },
       take: limit,
-    })
+    });
   } catch (error) {
-    console.error("Error fetching featured artists:", error)
-    return []
+    console.error("Error fetching featured artists:", error);
+    return [];
   }
 }
 
@@ -172,10 +174,10 @@ export async function getCategories(): Promise<Category[]> {
       orderBy: {
         name: "asc",
       },
-    })
+    });
   } catch (error) {
-    console.error("Error fetching categories:", error)
-    return []
+    console.error("Error fetching categories:", error);
+    return [];
   }
 }
 
@@ -185,7 +187,7 @@ export async function getArtworksByCategory(
   page = 1,
 ): Promise<{ artworks: ArtworkWithArtist[]; total: number }> {
   try {
-    const skip = (page - 1) * limit
+    const skip = (page - 1) * limit;
 
     const [artworks, total] = await Promise.all([
       prisma.artwork.findMany({
@@ -222,11 +224,14 @@ export async function getArtworksByCategory(
           },
         },
       }),
-    ])
+    ]);
 
-    return { artworks, total }
+    return { artworks, total };
   } catch (error) {
-    console.error(`Error fetching artworks by category ${categorySlug}:`, error)
-    return { artworks: [], total: 0 }
+    console.error(
+      `Error fetching artworks by category ${categorySlug}:`,
+      error,
+    );
+    return { artworks: [], total: 0 };
   }
 }

@@ -1,5 +1,5 @@
-import {prisma} from "@/lib/prisma";
-import {NextResponse} from "next/server";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -11,5 +11,5 @@ export async function GET() {
     },
     orderBy: [{ updatedAt: "desc" }],
   });
-  return NextResponse.json({slides});
+  return NextResponse.json({ slides });
 }
