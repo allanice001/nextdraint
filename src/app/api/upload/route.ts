@@ -6,17 +6,16 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { auth } from "@/lib/auth-utils";
 import crypto from "crypto";
 
-// Initialize S3 client for DigitalOcean Spaces
 const s3Client = new S3Client({
   region: "us-east-1", // DigitalOcean Spaces use this region identifier
   endpoint: process.env.DO_SPACES_ENDPOINT,
   credentials: {
-    accessKeyId: process.env.DO_SPACES_KEY || "",
-    secretAccessKey: process.env.DO_SPACES_SECRET || "",
+    accessKeyId: process.env.DO_SPACES_KEY!,
+    secretAccessKey: process.env.DO_SPACES_SECRET!,
   },
 });
 
-const spaceName = process.env.DO_SPACES_NAME || "";
+const spaceName = process.env.DO_SPACES_NAME!;
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Generate a unique file name
     const uniqueId = crypto.randomBytes(16).toString("hex");
-    const uniqueFileName = `artworks/${uniqueId}-${file.name}`;
+    const uniqueFileName = `artwork/${session.user.id}/${uniqueId}-${file.name}`;
 
     // Convert file to buffer
     const arrayBuffer = await file.arrayBuffer();

@@ -25,9 +25,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import {Check, ChevronsUpDown} from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { countries } from "@/lib/countries";
-import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -182,34 +189,35 @@ export function ProfileForm({
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0">
-                        <Command>
-                            <CommandInput placeholder="Search country..." />
-                            <CommandList>
-                                <CommandEmpty>No country found.</CommandEmpty>
-                                <CommandGroup className="max-h-64 overflow-y-auto">
-                                    {countries.map((country) => (
-                                        <CommandItem
-                                            key={country.value}
-                                            value={country.value}
-                                            onSelect={() => {
-                                                form.setValue("location", country.label)
-                                                setOpen(false)
-                                            }}
-                                        >
-                                            <Check
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    field.value === country.value || field.value === country.label
-                                                        ? "opacity-100"
-                                                        : "opacity-0",
-                                                )}
-                                            />
-                                            {country.label}
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </CommandList>
-                        </Command>
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          <CommandEmpty>No country found.</CommandEmpty>
+                          <CommandGroup className="max-h-64 overflow-y-auto">
+                            {countries.map((country) => (
+                              <CommandItem
+                                key={country.value}
+                                value={country.value}
+                                onSelect={() => {
+                                  form.setValue("location", country.label);
+                                  setOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    field.value === country.value ||
+                                      field.value === country.label
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                {country.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />

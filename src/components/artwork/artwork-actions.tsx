@@ -43,6 +43,7 @@ export function ArtworkActions({ artwork }: ArtworkActionsProps) {
         toast.success(`You liked "${artwork.title}"`);
       }
     } catch (error) {
+      console.error(error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

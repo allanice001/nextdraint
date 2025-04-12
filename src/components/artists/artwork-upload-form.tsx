@@ -1,8 +1,7 @@
 "use client";
 
 import type React from "react";
-
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { z } from "zod";
@@ -30,7 +29,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
-import { createArtwork } from "@/app/actions/artwork";
+import { uploadArtwork } from "@/app/actions/artwork";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import { ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command";
 
 const artworkFormSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }).max(100),
@@ -63,6 +66,7 @@ export function ArtworkUploadForm({
 }: ArtworkUploadFormProps) {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
+  const [mediumOpen, setMediumOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,8 +95,6 @@ export function ArtworkUploadForm({
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
   };
-
-  // Update the uploadFile function to use the server-side approach
 
   const uploadFile = async (file: File): Promise<string | null> => {
     try {
@@ -159,19 +161,9 @@ export function ArtworkUploadForm({
       formData.append("image", fileUrl);
       formData.append("categories", JSON.stringify(data.categories || []));
 
-      // Submit the form
-      const result = await createArtwork(formData);
+      const result = await uploadArtwork(formData);
 
-      if (result.success) {
-        toast.success("Artwork uploaded", {
-          description: "Your artwork has been successfully uploaded",
-        });
-        router.push(`/artwork/${result.artworkId}`);
-      } else {
-        toast.error("Upload failed", {
-          description: result.message,
-        });
-      }
+      console.log(result);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Something went wrong", {
@@ -359,7 +351,6 @@ export function ArtworkUploadForm({
                             <SelectItem value="EUR">EUR (€)</SelectItem>
                             <SelectItem value="USD">USD ($)</SelectItem>
                             <SelectItem value="GBP">GBP (£)</SelectItem>
-                            <SelectItem value="ETH">ETH (Ξ)</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -369,6 +360,10 @@ export function ArtworkUploadForm({
                 </div>
               </CardContent>
             </Card>
+
+            {/*
+            <pre>{JSON.stringify(mediums, null, 2)}</pre>
+            */}
 
             <Card>
               <CardContent className="p-6">
@@ -383,30 +378,56 @@ export function ArtworkUploadForm({
                 </div>
 
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <FormField
                       control={form.control}
                       name="medium_id"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Medium</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
+                          <Popover
+                            open={mediumOpen}
+                            onOpenChange={setMediumOpen}
                           >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select medium" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {mediums.map((medium) => (
-                                <SelectItem key={medium.id} value={medium.id}>
-                                  {medium.medium}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  aria-expanded={mediumOpen}
+                                  className={cn(
+                                    "w-full justify-between",
+                                    !field.value && "text-muted-foreground",
+                                  )}
+                                >
+                                  {field.value
+                                    ? mediums.find(
+                                        (medium) => medium.id === field.value,
+                                      )?.medium
+                                    : "Select medium"}
+                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className='w-full p-0'>
+                              <Command>
+                                <CommandInput placeholder='Select medium' />
+                                <CommandList>
+                                  <CommandEmpty>No Mediums found</CommandEmpty>
+                                  <CommandGroup className="max-h-64 overflow-y-auto">
+                                    {mediums.map((medium) => (
+                                        <CommandItem key={medium.value} value={medium.medium} onSelect={() => {
+                                          form.setValue("medium_id", medium.id);
+                                          setMediumOpen(false)
+                                        }}>
+                                          {medium.medium}
+                                        </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </CommandList>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -469,7 +490,7 @@ export function ArtworkUploadForm({
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <FormField
                       control={form.control}
                       name="height"

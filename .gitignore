@@ -40,3 +40,5 @@ next-env.d.ts
 *.sql
 *.txt
 .idea
+
+src/generated/

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth-utils";
 import { prisma } from "@/lib/prisma";
+import { Currencies } from "@prisma/client";
 
 export async function likeArtwork(artworkId: string) {
   const session = await auth();
@@ -158,5 +159,31 @@ export async function getSurfaces() {
   } catch (error) {
     console.error("Error fetching surfaces:", error);
     return { success: false, error: "Failed to fetch surfaces" };
+  }
+}
+
+export async function uploadArtwork(data) {
+  try {
+    const artwork = await prisma.artwork.create({
+      data: {
+        title: data.title,
+        description: data.description || "",
+        price: data.price,
+        currency: data.currency as Currencies,
+        medium_id: data.medium_id,
+        surface_id: data.surface_id,
+        style_id: data.style_id,
+        height: Number(data.height),
+        width: Number(data.width),
+        thickness: Number(data.thickness),
+        image: data.fileUrl,
+        categories: data.categories || [],
+      },
+    });
+
+    return { success: true, artwork };
+  } catch (error) {
+    console.error("Error uploading artwork:", error);
+    return { success: false, error: "Failed to upload artwork" };
   }
 }
