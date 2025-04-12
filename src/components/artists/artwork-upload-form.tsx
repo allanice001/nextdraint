@@ -161,9 +161,13 @@ export function ArtworkUploadForm({
       formData.append("image", fileUrl);
       formData.append("categories", JSON.stringify(data.categories || []));
 
+      console.log(JSON.stringify(formData, null, 2))
       const result = await uploadArtwork(formData);
 
-      console.log(result);
+      if (result.success) {
+        router.push(`/artworks/${result.artwork.id}`)
+        toast.success('Artwork uploaded')
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Something went wrong", {

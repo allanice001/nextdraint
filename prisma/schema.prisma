@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma/client"
+  //output   = "../src/generated/prisma/client"
 }
 
 // User model for authentication and profile information
@@ -98,7 +98,7 @@ model Artwork {
   price       Decimal    @db.Decimal(10, 2)
   currency    Currencies @default(EUR)
   weight      Int?
-  height      Int
+  height      Int?
   width       Int?
   thickness   Int?
   duration    BigInt?

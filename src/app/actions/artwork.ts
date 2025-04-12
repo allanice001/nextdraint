@@ -1,9 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth-utils";
-import { prisma } from "@/lib/prisma";
-import { Currencies } from "@prisma/client";
+import {revalidatePath} from "next/cache";
+import {auth} from "@/lib/auth-utils";
+import {prisma} from "@/lib/prisma";
 
 export async function likeArtwork(artworkId: string) {
   const session = await auth();
@@ -162,22 +161,57 @@ export async function getSurfaces() {
   }
 }
 
-export async function uploadArtwork(data) {
+export async function uploadArtwork(formData) {
+  const session = await auth()
+  if (!session?.user.id) {
+    return { success: false, error: "You must be logged in to upload artwork" }
+  }
+
   try {
+    const title = formData.get("title") || ""
+    const description = formData.get("description") || ""
+    const price = formData.get("price")
+    const currency = formData.get("currency")
+    const medium_id = formData.get("medium_id")
+    const surface_id = formData.get("surface_id")
+    const style_id = formData.get("style_id")
+    const height = formData.get("height") ? Number(formData.get("height")) : null
+    const width = formData.get("width") ? Number(formData.get("width")) : null
+    const thickness = formData.get("thickness") ? Number(formData.get("thickness")) : null
+    const image = formData.get("image")
+
+    let categoryIds = []
+    const categoriesData = formData.get("categories")
+
+    if (typeof categoriesData === "string") {
+      try {
+        categoryIds = JSON.parse(categoriesData)
+      } catch {
+        categoryIds = []
+      }
+    } else if (Array.isArray(categoriesData)) {
+      categoryIds = categoriesData
+    }
+    const categoriesConnect = categoryIds.length > 0 ?
+        {
+          connect: categoryIds.map((id: string) => ({id}))
+        } : undefined
+
     const artwork = await prisma.artwork.create({
       data: {
-        title: data.title,
-        description: data.description || "",
-        price: data.price,
-        currency: data.currency as Currencies,
-        medium_id: data.medium_id,
-        surface_id: data.surface_id,
-        style_id: data.style_id,
-        height: Number(data.height),
-        width: Number(data.width),
-        thickness: Number(data.thickness),
-        image: data.fileUrl,
-        categories: data.categories || [],
+        title,
+        description,
+        categories: categoriesConnect,
+        currency,
+        surface_id,
+        medium_id,
+        style_id,
+        height,
+        width,
+        thickness,
+        image,
+        price,
+        userId: session.user.id
       },
     });
 
