@@ -46,7 +46,7 @@
     "embla-carousel-react": "^8.5.2",
     "form-data": "^4.0.2",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.492.0",
+    "lucide-react": "^0.493.0",
     "mailgun.js": "^12.0.1",
     "next": "14.2.25",
     "next-auth": "^4.24.11",
