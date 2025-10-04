@@ -1848,10 +1848,10 @@
   resolved "https://registry.yarnpkg.com/@react-email/column/-/column-0.0.13.tgz#0aaa5d6abae1b590a0262bfbfd241344a2c60ad3"
   integrity sha512-Lqq17l7ShzJG/d3b1w/+lVO+gp2FM05ZUo/nW0rjxB8xBICXOVv6PqjDnn3FXKssvhO5qAV20lHM6S+spRhEwQ==
 
-"@react-email/components@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@react-email/components/-/components-0.4.0.tgz#695a5de472d2666c36a2aa35142b4d5439394837"
-  integrity sha512-JzEb6eVXizGfypXbr4jRj9wthywJUN62PrR7Q1Cz6TChi1FClIhIox0EpL9Asx0WpLHYB/XA7D6zjHASMeef3A==
+"@react-email/components@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@react-email/components/-/components-0.5.5.tgz#d111bcc2efbe9571527e21635c1c3aad05e5f0bf"
+  integrity sha512-+utnip1DiXTq5TQKvL8qztWy0EC3L+qdRIeJkBZXJA4WGIukbaqimWCTBGIMW19Pj+1iKvDYk2JQHEQDLiq7uQ==
   dependencies:
     "@react-email/body" "0.1.0"
     "@react-email/button" "0.2.0"
@@ -1868,7 +1868,7 @@
     "@react-email/link" "0.0.12"
     "@react-email/markdown" "0.0.15"
     "@react-email/preview" "0.0.13"
-    "@react-email/render" "1.1.4"
+    "@react-email/render" "1.3.1"
     "@react-email/row" "0.0.12"
     "@react-email/section" "0.0.16"
     "@react-email/tailwind" "1.2.2"
@@ -1926,10 +1926,10 @@
   resolved "https://registry.yarnpkg.com/@react-email/preview/-/preview-0.0.13.tgz#b68365d26a2772910d7a19345fa109819b167606"
   integrity sha512-F7j9FJ0JN/A4d7yr+aw28p4uX7VLWs7hTHtLo7WRyw4G+Lit6Zucq4UWKRxJC8lpsUdzVmG7aBJnKOT+urqs/w==
 
-"@react-email/render@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@react-email/render/-/render-1.1.4.tgz#b98491f7c0423304f12bbc19fdefb2b60843bf9a"
-  integrity sha512-9ZFRrDB8AiRpacWDDXC5q14D5uCE1uR7iStbxAOHsL5vvAj8JGfCwl8zZ/BubVwALlIhFQiyJPCvGbyfbkPVuw==
+"@react-email/render@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@react-email/render/-/render-1.3.1.tgz#0fd66718754db1303e408cab5eacb4e47f9ee78b"
+  integrity sha512-BOc/kanieEVyiuldFFvceriiBGBBVhe4JWWXCXE2ehLIqz+gSWD4rgCoXAGbJRnnVyyp4joPqK62bSfa88yonA==
   dependencies:
     html-to-text "^9.0.5"
     prettier "^3.5.3"
