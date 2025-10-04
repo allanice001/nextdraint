@@ -1926,7 +1926,7 @@
   resolved "https://registry.yarnpkg.com/@react-email/preview/-/preview-0.0.13.tgz#b68365d26a2772910d7a19345fa109819b167606"
   integrity sha512-F7j9FJ0JN/A4d7yr+aw28p4uX7VLWs7hTHtLo7WRyw4G+Lit6Zucq4UWKRxJC8lpsUdzVmG7aBJnKOT+urqs/w==
 
-"@react-email/render@1.3.1":
+"@react-email/render@1.3.1", "@react-email/render@^1.1.4":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@react-email/render/-/render-1.3.1.tgz#0fd66718754db1303e408cab5eacb4e47f9ee78b"
   integrity sha512-BOc/kanieEVyiuldFFvceriiBGBBVhe4JWWXCXE2ehLIqz+gSWD4rgCoXAGbJRnnVyyp4joPqK62bSfa88yonA==
@@ -1934,15 +1934,6 @@
     html-to-text "^9.0.5"
     prettier "^3.5.3"
     react-promise-suspense "^0.3.4"
-
-"@react-email/render@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@react-email/render/-/render-1.0.5.tgz#88285b9314b85d2bc102f5bf3e558be82b87bc18"
-  integrity sha512-CA69HYXPk21HhtAXATIr+9JJwpDNmAFCvdMUjWmeoD1+KhJ9NAxusMRxKNeibdZdslmq3edaeOKGbdQ9qjK8LQ==
-  dependencies:
-    html-to-text "9.0.5"
-    prettier "3.4.2"
-    react-promise-suspense "0.3.4"
 
 "@react-email/row@0.0.12":
   version "0.0.12"
@@ -4037,7 +4028,7 @@ hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-html-to-text@9.0.5, html-to-text@^9.0.5:
+html-to-text@^9.0.5:
   version "9.0.5"
   resolved "https://registry.yarnpkg.com/html-to-text/-/html-to-text-9.0.5.tgz#6149a0f618ae7a0db8085dca9bbf96d32bb8368d"
   integrity sha512-qY60FjREgVZL03vJU6IfMV4GDjGBIoOyvuFdpBDIX9yTlDw0TjxVBQp+P8NvpdIXNJvfWBTNul7fsAQJq2FNpg==
@@ -4986,11 +4977,6 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier@3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.4.2.tgz#a5ce1fb522a588bf2b78ca44c6e6fe5aa5a2b13f"
-  integrity sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==
-
 prettier@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.5.3.tgz#4fc2ce0d657e7a02e602549f053b239cb7dfe1b5"
@@ -5058,7 +5044,7 @@ react-is@^16.13.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-promise-suspense@0.3.4, react-promise-suspense@^0.3.4:
+react-promise-suspense@^0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/react-promise-suspense/-/react-promise-suspense-0.3.4.tgz#05d19a75703d71374674840056cfef2fcd38809d"
   integrity sha512-I42jl7L3Ze6kZaq+7zXWSunBa3b1on5yfvUW6Eo/3fFOj6dZ5Bqmcd264nJbTK/gn1HjjILAjSwnZbV4RpSaNQ==
